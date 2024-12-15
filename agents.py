@@ -1,4 +1,4 @@
-from crewai import Agent
+from crewai import Agent, LLM
 from textwrap import dedent
 from langchain.llms import OpenAI, Ollama
 from langchain_openai import ChatOpenAI
@@ -39,24 +39,36 @@ class CustomAgents:
         self.OpenAIGPT4 = ChatOpenAI(model_name="gpt-4", temperature=0.7)
         self.Ollama = Ollama(model="openhermes")
 
-    def agent_1_name(self):
+    def expert_travel_agent(self):
         return Agent(
-            role="Define agent 1 role here",
-            backstory=dedent(f"""Define agent 1 backstory here"""),
-            goal=dedent(f"""Define agent 1 goal here"""),
-            # tools=[tool_1, tool_2],
-            allow_delegation=False,
+            role="Expert Travel Agent",
+            backstory=dedent(f"""
+                            Expert in travel planning and logistics, I have decades of experience making travel iteneraries
+                            """),
+            goal=dedent(f"""
+                        Create a 7-day travel itinerary with detailed per-day plans,
+                        including budget, packing suggestions, and safety tips.
+                        """),
             verbose=True,
-            llm=self.OpenAIGPT35,
+            llm=LLM(model="ollama/llama3.2", base_url="http://localhost:11434")
         )
 
-    def agent_2_name(self):
+    def city_selection_expert(self):
         return Agent(
             role="Define agent 2 role here",
-            backstory=dedent(f"""Define agent 2 backstory here"""),
-            goal=dedent(f"""Define agent 2 goal here"""),
-            # tools=[tool_1, tool_2],
+            backstory=dedent(f"""Expert at analyzing travel data to pick ideal destinations"""),
+            goal=dedent(f"""Select the best cities based on weather, seasons, prices and traveler's intent"""),
             allow_delegation=False,
             verbose=True,
-            llm=self.OpenAIGPT35,
+            llm=LLM(model="ollama/llama3.2", base_url="http://localhost:11434")
+        )
+    
+    def local_tour_guide(self):
+        return Agent(
+            role="Local Tour Guide",
+            backstory=dedent(f"""Knowledgeable local guide with extensive information about the city, it's attractions and customs"""),
+            goal=dedent(f"""Provide the best insights about the selected city"""),
+            allow_delegation=False,
+            verbose=True,
+            llm=LLM(model="ollama/llama3.2", base_url="http://localhost:11434")
         )
